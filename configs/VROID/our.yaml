@@ -1,0 +1,57 @@
+_BASE_: "Base-Panoptic-FPN.yaml"
+OUTPUT_DIR: "./output/our"
+MODEL:
+  TRAINABLE: ["instance_encoder","relation_heads.instance_head","relation_heads.pair_head","relation_heads.predicate_head"]
+  DEVICE: "cuda"
+  META_ARCHITECTURE: "PanopticRelation"
+  WEIGHTS: "panoptic_fpn_R_101_3x.pkl"
+  RESNETS:
+    DEPTH: 101
+  RPN:
+    IN_FEATURES: ["p2", "p3", "p4", "p5", "p6"]
+    PRE_NMS_TOPK_TRAIN: 1000  # Per FPN level
+    PRE_NMS_TOPK_TEST: 1000  # Per FPN level
+    # Detectron1 uses 2000 proposals per-batch,
+    # (See "modeling/rpn/rpn_outputs.py" for details of this legacy issue)
+    # which is approximately 1000 proposals per-image since the default batch size for FPN is 2.
+    POST_NMS_TOPK_TRAIN: 1000
+    POST_NMS_TOPK_TEST: 1000
+  RELATION_HEADS:
+    IMAGE_SIZE: 512
+    INSTANCE_NUM: 134
+    RELATION_NUM: 250
+    SMOOTH_L1_BETA: 0.0
+    NAME: "StandardRelationHeads"
+    MASK_ON: False
+    RELATION_HEAD_LIST: ["instance","pair","predicate"]
+    RELATION_INSTANCE_ENCODER:
+      NAME: "InstanceEncoder1"
+    RELATION_INSTANCE_HEAD:
+      NAME: "InstanceHead14"
+    RELATION_PAIR_HEAD:
+      NAME: "PairHead17"
+    RELATION_PREDICATE_HEAD:
+      NAME: "PredicateHeadsMFULN45"
+      USE_BIAS: False
+      UNLABELED_ITERATION_THRESHOLD1: 30000
+      UNLABELED_ITERATION_THRESHOLD2: 60000
+      AF: 1.0
+
+DATASETS:
+  TRAIN: ("viroi_train",)
+  TEST: ("viroi_test",)
+INPUT:
+  MASK_FORMAT: "bitmask"
+SOLVER:
+  IMS_PER_BATCH: 1
+  CHECKPOINT_PERIOD: 1000
+  MAX_ITER: 120000
+  #NESTEROV: True
+  BASE_LR: 0.01 # 0.001x30000-relation_cls, 0.001x30000-predicate, 0.01x20000-instance pair,
+  BIAS_LR_FACTOR: 1.0
+  WARMUP_FACTOR: 0.02
+  WARMUP_ITERS: 100
+  WARMUP_METHOD: linear
+  STEPS: (60000, 90000, 120000)
+TEST:
+  DETECTIONS_PER_IMAGE: 80

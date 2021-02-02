@@ -1,0 +1,11 @@
+_BASE_: "../Base-RCNN-FPN.yaml"
+OUTPUT_DIR: "./output/panoptic"
+MODEL:
+  META_ARCHITECTURE: "PanopticRelation"
+  WEIGHTS: "panoptic_fpn_R_101_3x.pkl"
+  MASK_ON: True
+  RESNETS:
+    DEPTH: 101
+DATASETS:
+  TRAIN: ("viroi_train",)
+  TEST: ("viroi_test",)
