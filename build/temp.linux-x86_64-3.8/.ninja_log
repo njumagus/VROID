@@ -1,0 +1,27 @@
+# ninja log v5
+6	810	1612441807817059955	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/cuda_version.o	1690e6787f961a79
+3	7049	1612441814057060166	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/cocoeval/cocoeval.o	967161a3f6df33b4
+2	7448	1612441814457060179	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/box_iou_rotated/box_iou_rotated_cpu.o	c5ba83fddebc1394
+2	9041	1612441816049060233	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/nms_rotated/nms_rotated_cpu.o	2ad92b9a23ae915f
+3	12832	1612441819837060361	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/ROIAlignRotated/ROIAlignRotated_cpu.o	632a44922222b21f
+1	12987	1612441819993060366	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/ROIAlign/ROIAlign_cpu.o	414825c26388e72e
+4	15266	1612441822269060443	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/box_iou_rotated/box_iou_rotated_cuda.o	42e0ad22e0019b5b
+5	15680	1612441822681060457	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/ROIAlignRotated/ROIAlignRotated_cuda.o	6e9b340ffd9cc1a2
+4	15805	1612441822805060461	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/nms_rotated/nms_rotated_cuda.o	5c9a62a431d6b854
+3	15844	1612441822849060463	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/ROIAlign/ROIAlign_cuda.o	f3b94fb88e0ed89
+5	15931	1612441822933060466	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/deformable/deform_conv_cuda_kernel.o	328a0ec5cf05ce6
+5	19967	1612441826969060602	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/deformable/deform_conv_cuda.o	b50600e5fffd2fb1
+0	27230	1612441834229060847	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/vision.o	e4e4f29978771c0b
+11	818	1612441835769060899	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/cuda_version.o	13a32bdceb19fe6
+7	6713	1612441841661061098	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/cocoeval/cocoeval.o	f56fd94c9cdbb30f
+6	7404	1612441842353061122	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/box_iou_rotated/box_iou_rotated_cpu.o	c6667c973151b767
+6	8995	1612441843945061175	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/nms_rotated/nms_rotated_cpu.o	8b0afe0cc348469
+5	11526	1612441846473061261	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/ROIAlign/ROIAlign_cpu.o	cdab6135078bc9f9
+7	12109	1612441847053061280	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/ROIAlignRotated/ROIAlignRotated_cpu.o	5d5f5fcd9c886307
+8	14773	1612441849721061370	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/ROIAlign/ROIAlign_cuda.o	356de7ce9a6e5c3b
+9	15151	1612441850097061383	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/ROIAlignRotated/ROIAlignRotated_cuda.o	3a497514ae7a73eb
+9	15210	1612441850157061385	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/box_iou_rotated/box_iou_rotated_cuda.o	c3bdd8033755c635
+8	15363	1612441850305061390	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/nms_rotated/nms_rotated_cuda.o	23b1bf68683d64a8
+10	15445	1612441850389061393	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/deformable/deform_conv_cuda_kernel.o	8d9aa0723f31f687
+10	19619	1612441854565061534	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/deformable/deform_conv_cuda.o	d9ca790357480fe2
+5	27753	1612441862693061808	/media/magus/Data1/magus/Methods/MM20/VROID/build/temp.linux-x86_64-3.8/media/magus/Data1/magus/Methods/MM20/VROID/detectron2/layers/csrc/vision.o	ee767de5fc108414
