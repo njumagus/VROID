@@ -8,5 +8,5 @@ License: UNKNOWN
 Description: UNKNOWN
 Platform: UNKNOWN
 Requires-Python: >=3.6
-Provides-Extra: all
 Provides-Extra: dev
+Provides-Extra: all
