@@ -68,7 +68,7 @@ def separate_coco_semantic_from_panoptic(panoptic_json, panoptic_root, sem_seg_r
 
     print("Start writing to {} ...".format(sem_seg_root))
     start = time.time()
-    exists = os.listdir("../data/viroi_stuff")
+    exists = os.listdir(sem_seg_root)
     for image_id in images_dict:
         image_dict = images_dict[image_id]
         file_name = image_dict["image_name"]
