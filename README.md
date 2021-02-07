@@ -22,8 +22,8 @@ download dataset to
 │   ├── test_images_triplets_dict.json  
 │   ├── class_dict.json  
 │   └── relation_dict.json  
-├── [viroi_images](https://drive.google.com/file/d/1yRyduTD58_lL1GI4oGoUdhpi3gnjzvgO/view?usp=sharing) (MSCOCO images filtered by IOID, foler )  
-├── [viroi_panoptic](https://drive.google.com/file/d/1nxvSLhNkk7Vc2HEEXquG51tESwEHK07T/view?usp=sharing) (MSCOCO panoptic annotation images filtered by IOID)  
+├── [ioid_images](https://drive.google.com/file/d/1yRyduTD58_lL1GI4oGoUdhpi3gnjzvgO/view?usp=sharing) (MSCOCO images filtered by IOID)  
+├── [ioid_panoptic](https://drive.google.com/file/d/1nxvSLhNkk7Vc2HEEXquG51tESwEHK07T/view?usp=sharing) (MSCOCO panoptic annotation images filtered by IOID)  
 └── viroi_stuff (python prepare_panoptic.py)  
 
 ## preprocess

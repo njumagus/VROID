@@ -27,12 +27,12 @@ from .builtin_meta import _get_builtin_metadata
 # ==== Predefined datasets and splits for COCO ==========
 _PREDEFINED_SPLITS_REOID = {}
 _PREDEFINED_SPLITS_REOID["viroi"] = {
-    "viroi_train": ("../data/viroi_images","../data/viroi_stuff","../data/viroi_panoptic","../data/viroi_json/class_dict.json","../data/viroi_json/relation_dict.json","../data/viroi_json/train_images_dict.json","../data/viroi_json/train_images_triplets_dict.json"),
-    "viroi_test": ("../data/viroi_images","../data/viroi_stuff","../data/viroi_panoptic","../data/viroi_json/class_dict.json","../data/viroi_json/relation_dict.json","../data/viroi_json/test_images_dict.json","../data/viroi_json/test_images_triplets_dict.json"),
-    "viroi_test5": ("../data/viroi_images","../data/viroi_stuff","../data/viroi_panoptic","../data/viroi_json/class_dict.json","../data/viroi_json/relation_dict.json","../data/viroi_json/5_images_dict.json","../data/viroi_json/5_images_triplets_dict.json"),
+    "viroi_train": ("../data/ioid_images","../data/viroi_stuff","../data/ioid_panoptic","../data/viroi_json/class_dict.json","../data/viroi_json/relation_dict.json","../data/viroi_json/train_images_dict.json","../data/viroi_json/train_images_triplets_dict.json"),
+    "viroi_test": ("../data/ioid_images","../data/viroi_stuff","../data/ioid_panoptic","../data/viroi_json/class_dict.json","../data/viroi_json/relation_dict.json","../data/viroi_json/test_images_dict.json","../data/viroi_json/test_images_triplets_dict.json"),
+    "viroi_test5": ("../data/ioid_images","../data/viroi_stuff","../data/ioid_panoptic","../data/viroi_json/class_dict.json","../data/viroi_json/relation_dict.json","../data/viroi_json/5_images_dict.json","../data/viroi_json/5_images_triplets_dict.json"),
 
-    "viroi_minitrain": ("../data/viroi_images","../data/viroi_stuff","../data/viroi_panoptic","../data/viroi_json/class_dict.json","../data/viroi_json/relation_dict.json","../data/viroi_json/mini/minitrain_images_dict.json","../data/viroi_json/mini/mini_train_images_triplets_dict.json"),
-    "viroi_minival": ("../data/viroi_images","../data/viroi_stuff","../data/viroi_panoptic","../data/viroi_json/class_dict.json","../data/viroi_json/relation_dict.json","../data/viroi_json/mini/mini_test_images_dict.json","../data/viroi_json/mini/mini_test_images_triplets_dict.json")
+    "viroi_minitrain": ("../data/ioid_images","../data/viroi_stuff","../data/ioid_panoptic","../data/viroi_json/class_dict.json","../data/viroi_json/relation_dict.json","../data/viroi_json/mini/minitrain_images_dict.json","../data/viroi_json/mini/mini_train_images_triplets_dict.json"),
+    "viroi_minival": ("../data/ioid_images","../data/viroi_stuff","../data/ioid_panoptic","../data/viroi_json/class_dict.json","../data/viroi_json/relation_dict.json","../data/viroi_json/mini/mini_test_images_dict.json","../data/viroi_json/mini/mini_test_images_triplets_dict.json")
 }
 
 def register_all_viroi(root="datasets"):

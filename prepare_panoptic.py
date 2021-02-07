@@ -94,7 +94,7 @@ if __name__ == "__main__":
     for s in ["train", "test"]:
         separate_coco_semantic_from_panoptic(
             os.path.join("../data/viroi_json", "{}_images_dict.json".format(s)),
-            "../data/viroi_panoptic",
+            "../data/ioid_panoptic",
             "../data/viroi_stuff",
             class_dict,
         )
