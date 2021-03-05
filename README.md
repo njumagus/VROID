@@ -14,7 +14,7 @@ docker run -it -v /host/path/to/VROID:/docker/path/to/VROID --ipc=host --net=hos
 
 ## dataset
 download dataset to  
-../data
+../data  
 ├── [viroi_json](https://drive.google.com/file/d/1PwntYlHar803vArwLV9Ba2KaRl9BT7ee/view?usp=sharing)  
 │   ├── train_images_dict.json  
 │   ├── train_images_triplets_dict.json  
