@@ -75,6 +75,9 @@ Run on multiple machines:
     )
     parser.add_argument("--config-file", default="", metavar="FILE", help="path to config file")
     parser.add_argument("--mode", type=str, default="train_rellation", help="path to config file") # test_panoptic train_rellation test_relation
+    parser.add_argument("--image_path", type=str, default="000000000328.jpg", help="path to config file")
+    parser.add_argument("--visible", action="store_true", help="perform visualization")
+    parser.add_argument("--visible_num",  type=int, default=5, help="perform visualization")
     parser.add_argument(
         "--resume",
         action="store_true",
@@ -201,7 +204,7 @@ class DefaultPredictor:
         self.input_format = cfg.INPUT.FORMAT
         assert self.input_format in ["RGB", "BGR"], self.input_format
 
-    def __call__(self, original_image,iterate):
+    def __call__(self, original_image,iterate,mode="panoptic"):
         """
         Args:
             original_image (np.ndarray): an image of shape (H, W, C) (in BGR order).
@@ -221,8 +224,15 @@ class DefaultPredictor:
             image = torch.as_tensor(image.astype("float32").transpose(2, 0, 1))
 
             inputs = {"image": image, "height": height, "width": width}
-            predictions = self.model([inputs],iterate,"panoptic",training=False)[0]
-            return predictions
+            if mode=="panoptic":
+                predictions = self.model([inputs],iterate,mode,training=False)[0]
+                return predictions
+            elif mode=="relation":
+                pred_instances, relation_results, losses, metrics = self.model([inputs], iterate, mode, training=False)
+                return pred_instances, relation_results
+            else:
+                print(mode,"is not allowed")
+                exit()
 
 
 class DefaultTrainer(TrainerBase):

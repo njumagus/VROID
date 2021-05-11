@@ -12,9 +12,10 @@ import pycocotools.mask as mask_util
 import torch
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from PIL import Image
+from random import randint
 
 from detectron2.data import MetadataCatalog
-from detectron2.structures import BitMasks, Boxes, BoxMode, Keypoints, PolygonMasks, RotatedBoxes
+from detectron2.structures import BitMasks, Boxes, BoxMode, PolygonMasks, RotatedBoxes
 from detectron2.utils.file_io import PathManager
 
 from .colormap import random_color
@@ -589,6 +590,180 @@ class Visualizer:
             self.draw_panoptic_seg(pan_seg, segments_info, area_threshold=0, alpha=0.5)
         return self.output
 
+    def draw_relation_predictions(self, predictions):
+        subject_classes = predictions.subject_classes if predictions.has("subject_classes") else None
+        subject_boxes = predictions.subject_boxes if predictions.has("subject_boxes") else None
+        object_classes = predictions.object_classes if predictions.has("object_classes") else None
+        object_boxes = predictions.object_boxes if predictions.has("object_boxes") else None
+        scores = predictions.scores if predictions.has("scores") else None
+        relations = predictions.relations if predictions.has("relations") else None
+
+        subject_labels = _create_text_labels(subject_classes, None, self.metadata.get("instance_classes", None))
+        object_labels = _create_text_labels(object_classes, None, self.metadata.get("instance_classes", None))
+        relation_labels = _create_text_labels(relations, None, self.metadata.get("relation_classes"))
+        # if visible_label and visible_label != "instance" and visible_label != "part":
+        #     visible_indexes = []
+        #     visible_labels = []
+        #     for i, label in enumerate(labels):
+        #         if label[:-4] == visible_label:
+        #             visible_indexes.append(i)
+        #             visible_labels.append(label)
+        #     visible_indexes = torch.Tensor(visible_indexes).long()
+        #     boxes = boxes[visible_indexes]
+        #     scores = scores[visible_indexes]
+        #     classes = classes[visible_indexes]
+        #     labels = visible_labels
+        keypoints=None
+        # if predictions.has("pred_masks"):
+        #     if visible_label and visible_label != "instance" and visible_label != "part":
+        #         masks = np.asarray(predictions.pred_masks[visible_indexes])
+        #     else:
+        #         masks = np.asarray(predictions.pred_masks)
+        #     masks = [GenericMask(x, self.output.height, self.output.width) for x in masks]
+        # else:
+        masks = None
+
+        # if self._instance_mode == ColorMode.SEGMENTATION and self.metadata.get("thing_colors"):
+        #     colors = [
+        #         self._jitter([x / 255 for x in self.metadata.thing_colors[c]]) for c in classes
+        #     ]
+        #     alpha = 0.8
+        # else:
+        colors = None
+        alpha = 0.5
+
+        # if self._instance_mode == ColorMode.IMAGE_BW:
+        #     self.output.img = self._create_grayscale_image(
+        #         (predictions.pred_masks.any(dim=0) > 0).numpy()
+        #         if predictions.has("pred_masks")
+        #         else None
+        #     )
+        #     alpha = 0.3
+
+        self.overlay_relational_instances(
+            # masks=masks,
+            subject_boxes=subject_boxes,
+            subject_labels=subject_labels,
+            object_boxes=object_boxes,
+            object_labels=object_labels,
+            # keypoints=keypoints,
+            assigned_colors=colors,
+            alpha=alpha,
+            relation_labels=relation_labels,
+            scores=scores
+        )
+        return self.output
+    def overlay_relational_instances(
+        self,
+        *,
+        subject_boxes=None,
+        subject_labels=None,
+        object_boxes=None,
+        object_labels=None,
+        # masks=None,
+        # keypoints=None,
+        assigned_colors=None,
+        alpha=0.5,
+        relation_labels=None,
+        scores=None
+    ):
+        num_instances = None
+        if subject_boxes is not None:
+            subject_boxes = self._convert_boxes(subject_boxes)
+            num_instances = len(subject_boxes)
+        if object_boxes is not None:
+            object_boxes = self._convert_boxes(object_boxes)
+
+        if subject_labels is not None:
+            assert len(subject_labels) == num_instances
+        if assigned_colors is None:
+            assigned_colors = [random_color(rgb=True, maximum=1) for _ in range(num_instances)]
+        if num_instances == 0:
+            return self.output
+
+        for i in range(num_instances):
+            color = assigned_colors[i]
+            if scores is not None:
+                print(subject_labels[i],relation_labels[i],object_labels[i],scores[i].item())
+            else:
+                print(subject_labels[i], relation_labels[i], object_labels[i])
+            if subject_boxes is not None:
+                self.draw_box(subject_boxes[i], edge_color=color)
+            if object_boxes is not None:
+                self.draw_box(object_boxes[i], edge_color=color)
+            self.draw_line([subject_boxes[i][0],object_boxes[i][0]],[subject_boxes[i][1],object_boxes[i][1]],color)
+
+            if subject_labels is not None:
+                # first get a box
+                if subject_boxes is not None:
+                    x0, y0, x1, y1 = subject_boxes[i]
+                    text_pos = (x0, y0)  # if drawing boxes, put text on the box corner.
+                    horiz_align = "left"
+
+                instance_area = (y1 - y0) * (x1 - x0)
+                if (
+                    instance_area < _SMALL_OBJECT_AREA_THRESH * self.output.scale
+                    or y1 - y0 < 40 * self.output.scale
+                ):
+                    if y1 >= self.output.height - 5:
+                        text_pos = (x1, y0)
+                    else:
+                        text_pos = (x0, y1)
+
+                height_ratio = (y1 - y0) / np.sqrt(self.output.height * self.output.width)
+                lighter_color = self._change_color_brightness(color, brightness_factor=0.7)
+                font_size = (
+                    np.clip((height_ratio - 0.02) / 0.08 + 1, 1.2, 2)
+                    * 0.5
+                    * self._default_font_size
+                )
+                self.draw_text(
+                    subject_labels[i],
+                    text_pos,
+                    color=lighter_color,
+                    horizontal_alignment=horiz_align,
+                    font_size=font_size,
+                )
+            if object_labels is not None:
+                # first get a box
+                if object_boxes is not None:
+                    x0, y0, x1, y1 = object_boxes[i]
+                    text_pos = (x0, y0)  # if drawing boxes, put text on the box corner.
+                    horiz_align = "left"
+
+                instance_area = (y1 - y0) * (x1 - x0)
+                if (
+                    instance_area < _SMALL_OBJECT_AREA_THRESH * self.output.scale
+                    or y1 - y0 < 40 * self.output.scale
+                ):
+                    if y1 >= self.output.height - 5:
+                        text_pos = (x1, y0)
+                    else:
+                        text_pos = (x0, y1)
+
+                height_ratio = (y1 - y0) / np.sqrt(self.output.height * self.output.width)
+                lighter_color = self._change_color_brightness(color, brightness_factor=0.7)
+                font_size = (
+                    np.clip((height_ratio - 0.02) / 0.08 + 1, 1.2, 2)
+                    * 0.5
+                    * self._default_font_size
+                )
+                self.draw_text(
+                    object_labels[i],
+                    text_pos,
+                    color=lighter_color,
+                    horizontal_alignment=horiz_align,
+                    font_size=font_size,
+                )
+            middle_co=((subject_boxes[i][0]+object_boxes[i][0])/2,(subject_boxes[i][1]+object_boxes[i][1])/2)
+            self.draw_text(
+                relation_labels[i],
+                ((subject_boxes[i][0]+middle_co[0])/2+randint(-10,10),(subject_boxes[i][1]+middle_co[1])/2++randint(-10,10)),
+                color=lighter_color,
+                horizontal_alignment=horiz_align,
+                font_size=font_size,
+            )
+        return self.output
     def overlay_instances(
         self,
         *,

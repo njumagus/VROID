@@ -12,7 +12,8 @@ from PIL import Image
 from pycocotools import mask as maskUtils
 from detectron2.data.detection_utils import read_image
 from panopticapi.utils import IdGenerator
-
+from detectron2.structures import ImageList, Instances, Boxes, BitMasks
+from detectron2.utils.visualizer import ColorMode, Visualizer
 import torch
 from torch.nn.parallel import DistributedDataParallel
 
@@ -707,6 +708,93 @@ def do_relation_train(cfg, model, resume=False):
             # except Exception as e:
             #     print(e)
 
+def do_relation_test_demo(cfg,image_path,visible=False,visible_num=5):
+    predictor = DefaultPredictor(cfg)
+    img = read_image(image_path, format="BGR")
+    pred_instances, results_dict = predictor(img, 0, mode="relation")
+    image_info={}
+
+    if len(pred_instances[0]) > 0:
+        pred_boxes = pred_instances[0].pred_boxes.tensor
+        height, width = pred_instances[0].image_size
+        ori_height, ori_width = img.shape[0], img.shape[1]
+        pred_classes = pred_instances[0].pred_classes
+        pred_boxes = torch.stack([pred_boxes[:, 1] * ori_height * 1.0 / height,
+                                  pred_boxes[:, 0] * ori_width * 1.0 / width,
+                                  pred_boxes[:, 3] * ori_height * 1.0 / height,
+                                  pred_boxes[:, 2] * ori_width * 1.0 / width], dim=1)
+
+        pred_classes = pred_classes.data.cpu().numpy()
+        pred_boxes = pred_boxes.data.cpu().numpy()
+
+        predicate_categories = results_dict['predicate_categories'][0].data.cpu().numpy().reshape(
+            len(pred_instances[0]), len(pred_instances[0]), 249)
+
+        pair_interest_pred = results_dict['pair_interest_pred'][0].data.cpu().numpy().reshape(len(pred_instances[0]),
+                                                                                              len(pred_instances[0]))
+        pair_interest_pred_instance_pair = pair_interest_pred * (1 - np.eye(len(pred_instances[0])))
+        predicate_factor = pair_interest_pred_instance_pair.reshape(len(pred_instances[0]), len(pred_instances[0]), 1)
+        single_result = (predicate_factor * predicate_categories).reshape(-1)
+        single_result_indx = np.argsort(single_result)[::-1][:100]
+        single_index = []
+        for i in range(len(pred_instances[0])):
+            for j in range(len(pred_instances[0])):
+                for k in range(249):
+                    single_index.append([i, j, k])
+        single_index = np.array(single_index)
+        locations = single_index[single_result_indx]
+        scores = single_result[single_result_indx]
+        image_info[image_path] = {
+            "relation_ids": (locations[:, 2] + 1).tolist(),
+            "subject_class_ids": pred_classes[locations[:, 0]].tolist(),
+            "subject_boxes": pred_boxes[locations[:, 0]].tolist(),
+            "object_class_ids": pred_classes[locations[:, 1]].tolist(),
+            "object_boxes": pred_boxes[locations[:, 1]].tolist(),
+            "scores": scores.tolist()
+        }
+    else:
+        image_info[image_path] = {
+            "relation_ids": [],
+            "subject_class_ids": [],
+            "subject_boxes": [],
+            "object_class_ids": [],
+            "object_boxes": [],
+            "scores": []
+        }
+
+    if visible:
+        subject_boxes = image_info[image_path]['subject_boxes']
+        object_boxes = image_info[image_path]['object_boxes']
+        subject_boxes_xyxy = []
+        object_boxes_xyxy = []
+        for sub_box, obj_box in zip(subject_boxes, object_boxes):
+            subject_boxes_xyxy.append([sub_box[1], sub_box[0], sub_box[3], sub_box[2]])
+            object_boxes_xyxy.append([obj_box[1], obj_box[0], obj_box[3], obj_box[2]])
+        subject_class_ids = image_info[image_path]['subject_class_ids']
+        object_class_ids = image_info[image_path]['object_class_ids']
+        scores = image_info[image_path]['scores']
+        relation_ids = image_info[image_path]['relation_ids']
+
+        subject_boxes = np.array(subject_boxes_xyxy)
+        object_boxes = np.array(object_boxes_xyxy)
+        subject_class_ids = np.array(subject_class_ids)
+        object_class_ids = np.array(object_class_ids)
+        relation_ids = np.array(relation_ids)
+        scores = np.array(scores)
+
+        sort_idx = np.argsort(-scores)[:visible_num]
+        triplets = Instances((img.shape[0], img.shape[1]))
+        triplets.subject_classes = torch.Tensor(subject_class_ids[sort_idx]).int() - 1
+        triplets.object_classes = torch.Tensor(object_class_ids[sort_idx]).int() - 1
+        triplets.subject_boxes = Boxes(torch.Tensor(subject_boxes[sort_idx, :]))
+        triplets.object_boxes = Boxes(torch.Tensor(object_boxes[sort_idx, :]))
+        triplets.relations = torch.Tensor(relation_ids[sort_idx]).int() - 1
+        triplets.scores = torch.Tensor(scores[sort_idx])
+        visualizer = Visualizer(img, MetadataCatalog.get(cfg.DATASETS.TEST[0]), instance_mode=ColorMode.IMAGE)
+        vis_output_instance = visualizer.draw_relation_predictions(triplets)
+        vis_output_instance.save(os.path.join(image_path.split("/")[-1].split(".")[0] + "_" + str(visible_num) + ".png"))
+    return image_info
+
 def setup(args):
     """
     Create configs and perform basic setups.
@@ -742,6 +830,8 @@ def main(args):
         json.dump(prediction_instance_json, open("./output/" + args.config_file.split("/")[-1] + "_instance.json", 'w'))
         json.dump(prediction_json,open("./output/"+args.config_file.split("/")[-1]+".json",'w'))
         json.dump(prediction_nopair_json,open("./output/"+args.config_file.split("/")[-1]+"_nopair.json",'w'))
+    elif args.mode=="demo":
+        do_relation_test_demo(cfg, args.image_path, args.visible, args.visible_num)
     else:
         print("mode not supported")
 

@@ -190,6 +190,7 @@ def _get_viroi_meta():
         "stuff_colors": stuff_colors,
     }
     ret.update(_get_viroi_instances_meta())
+    ret['instance_classes']=ret['thing_classes']+ret['stuff_classes']
     relation_dict=json.load(open("../data/viroi_json/relation_dict.json",'r'))
     relation_classes=[]
     relation_dataset_id_to_contiguous_id={}
