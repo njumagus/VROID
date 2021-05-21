@@ -13,7 +13,8 @@ docker pull yfraquelle/vroid_env:v1
 docker run -it -v /host/path/to/VROID:/docker/path/to/VROID --ipc=host --net=host <image_id> /bin/bash  
 
 ## dataset
-download dataset to  
+We constructed a ViROI dataset for VROID based on the 45,000 images in the IOID dataset and their corresponding captions in the MSCOCO dataset. After filtering the images without VROIs, the ViROI dataset contains 30,120 images. It is further divided into the training set (25,091 images with 91,496 VROIs) and the test set (5,029 images with 18,268 VROIs).  
+Download dataset to  
 ../data  
 ├── [viroi_json](https://drive.google.com/file/d/1PwntYlHar803vArwLV9Ba2KaRl9BT7ee/view?usp=sharing)  
 │   ├── train_images_dict.json  
