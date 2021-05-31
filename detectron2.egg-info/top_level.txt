@@ -1,3 +1,0 @@
-detectron2
-fvcore
-panopticapi

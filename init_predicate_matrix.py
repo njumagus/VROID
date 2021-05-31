@@ -20,7 +20,7 @@ def semantic_embedding():
     weights_matrix = np.zeros((matrix_len, 300))
     # valid_vocab=[]
     # all_vocab=[]
-    with open("../../glove.6B/glove.6B.300d.txt", 'rb') as f:
+    with open("../data/glove.6B/glove.6B.300d.txt", 'rb') as f:
         for l in f:
             line = l.decode().split()
             word = line[0]
@@ -105,7 +105,7 @@ def predicate_embedding():
     weights_matrix = np.zeros((matrix_len, 300))
     # valid_vocab=[]
     # all_vocab=[]
-    with open("../../glove.6B/glove.6B.300d.txt", 'rb') as f:
+    with open("../data/glove.6B/glove.6B.300d.txt", 'rb') as f:
         for l in f:
             line = l.decode().split()
             word = line[0]
@@ -139,4 +139,5 @@ def predicate_embedding():
     # json.dump(all_vocab,open("glove_all_vocab.json",'w'))
     torch.save({"predicate_embedding": weights_matrix}, "predicate_embedding.pth")
 
-predicate_embedding()
+# predicate_embedding()
+semantic_embedding()

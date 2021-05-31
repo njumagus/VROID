@@ -2,7 +2,8 @@
 - python 3.8
 - cuda 11.1
 - cudnn 8.0
-- torch 1.7
+- pytorch 1.7 
+
 apt-get install libglib2.0-dev libsm6 libxrender-dev libxext6  
 pip install torch==1.7.1+cu110 torchvision==0.8.2+cu110 -f https://download.pytorch.org/whl/torch_stable.html  
 pip install pyyaml==5.4.1 --ignore-installed  
@@ -11,6 +12,10 @@ pip install -r requirements.txt
 or:  
 docker pull yfraquelle/vroid_env:v1  
 docker run -it -v /host/path/to/VROID:/docker/path/to/VROID --ipc=host --net=host <image_id> /bin/bash  
+
+If you want to use other environments, make sure to use pytorch1.7 and the other dependencies should be adapted to pytorch1.7.  
+An example: python 3.6+, cuda 10.2, cudnn 7.6, pytorch 1.7 (pip install torch==1.7.1 torchvision==0.8.2)   
+For reference: https://pytorch.org/get-started/previous-versions/  
 
 ## dataset
 We constructed a ViROI dataset for VROID based on the 45,000 images in the IOID dataset and their corresponding captions in the MSCOCO dataset. After filtering the images without VROIs, the ViROI dataset contains 30,120 images. It is further divided into the training set (25,091 images with 91,496 VROIs) and the test set (5,029 images with 18,268 VROIs).  
@@ -25,19 +30,25 @@ Download dataset to
 │   └── relation_dict.json  
 ├── [ioid_images](https://drive.google.com/file/d/1yRyduTD58_lL1GI4oGoUdhpi3gnjzvgO/view?usp=sharing) (MSCOCO images filtered by IOID)  
 ├── [ioid_panoptic](https://drive.google.com/file/d/1nxvSLhNkk7Vc2HEEXquG51tESwEHK07T/view?usp=sharing) (MSCOCO panoptic annotation images filtered by IOID)  
-└── viroi_stuff (python prepare_panoptic.py)  
+├── viroi_stuff (python prepare_panoptic.py)  
+└── [glove.6B](https://nlp.stanford.edu/data/wordvecs/glove.6B.zip)
 
 ## preprocess
-python setup.py bulid develop    
+python setup.py build develop    
 python init_predicate_matrix.py  
 
-download pretrained model: https://dl.fbaipublicfiles.com/detectron2/COCO-PanopticSegmentation/panoptic_fpn_R_101_3x/139514519/model_final_cafdb1.pkl  
+download the [initialization parameters](https://dl.fbaipublicfiles.com/detectron2/COCO-PanopticSegmentation/panoptic_fpn_R_101_3x/139514519/model_final_cafdb1.pkl) to the root  
 
-python setup.py install develop  
+python setup.py develop  
+
+## demo
+The pretrained model weights can be [downloaded](https://drive.google.com/file/d/1-QOTkAUbfFzilNWHoXL6BOonOMtmxjML/view?usp=sharing).  
+python main.py --config configs/VROID/demo.yaml --mode demo --image_path 000000000328.jpg --visible --visible_num 10  
+The top 10 relations of interest will be visualized in 000000000328_10.png
+![image](000000000328_10.png)
 
 ## train
-python main.py --config configs/VROID/our.yaml --mode train_relation  
-The pretrained model weights can be [downloaded](https://drive.google.com/file/d/1-QOTkAUbfFzilNWHoXL6BOonOMtmxjML/view?usp=sharing).  
+python main.py --config configs/VROID/our.yaml --mode train_relation    
 
 ## test
 python main.py --config configs/VROID/test_our.yaml --mode test_relation  
