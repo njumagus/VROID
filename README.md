@@ -31,7 +31,7 @@ Download dataset to
 python setup.py bulid develop    
 python init_predicate_matrix.py  
 
-download pretrained model: https://dl.fbaipublicfiles.com/detectron2/COCO-PanopticSegmentation/panoptic_fpn_R_101_3x/139514519/model_final_cafdb1.pkl  
+download the pretrained model to the root folder: https://dl.fbaipublicfiles.com/detectron2/COCO-PanopticSegmentation/panoptic_fpn_R_101_3x/139514519/model_final_cafdb1.pkl and rename it as "panoptic_fpn_R_101_3x.pkl"   
 
 python setup.py install develop  
 

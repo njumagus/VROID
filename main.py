@@ -381,33 +381,34 @@ def do_relation_test(cfg, model):
                         # "scores": []
                     }
                     predicate_categories = results_dict['predicate_categories'][0].data.cpu().numpy().reshape(len(pred_instances[0]), len(pred_instances[0]), cfg.MODEL.PREDICATE_HEADS.RELATION_NUM - 1)
-                    instance_interest_pred = results_dict['instance_interest_pred'][0]
-                    sub_instance_interest_pred = instance_interest_pred.view(-1,1).expand(len(pred_instances[0]),len(pred_instances[0])).data.cpu().numpy()
-                    obj_instance_interest_pred = instance_interest_pred.view(1, -1).expand(len(pred_instances[0]),len(pred_instances[0])).data.cpu().numpy()
                     pair_interest_pred = results_dict['pair_interest_pred'][0].data.cpu().numpy().reshape(len(pred_instances[0]), len(pred_instances[0]))
+                    if 'instance_interest_pred' in results_dict:
+                        instance_interest_pred = results_dict['instance_interest_pred'][0]
+                        sub_instance_interest_pred = instance_interest_pred.view(-1,1).expand(len(pred_instances[0]),len(pred_instances[0])).data.cpu().numpy()
+                        obj_instance_interest_pred = instance_interest_pred.view(1, -1).expand(len(pred_instances[0]),len(pred_instances[0])).data.cpu().numpy()
 
-                    pair_interest_pred_instance_pair_instance = pair_interest_pred * (1 - np.eye(len(pred_instances[0]))) * sub_instance_interest_pred * obj_instance_interest_pred
-                    predicate_factor_instance = pair_interest_pred_instance_pair_instance.reshape(len(pred_instances[0]),len(pred_instances[0]), 1)
-                    single_result_instance = (predicate_factor_instance * predicate_categories).reshape(-1)
-                    single_result_indx_instance = np.argsort(single_result_instance)[::-1][:100]
-                    single_index_instance = []
-                    for i in range(len(pred_instances[0])):
-                        for j in range(len(pred_instances[0])):
-                            for k in range(cfg.MODEL.PREDICATE_HEADS.RELATION_NUM - 1):
-                                single_index_instance.append([i, j, k])
-                    single_index_instance = np.array(single_index_instance)
-                    locations_instance = single_index_instance[single_result_indx_instance]
-                    scores_instance = single_result_instance[single_result_indx_instance]
+                        pair_interest_pred_instance_pair_instance = pair_interest_pred * (1 - np.eye(len(pred_instances[0]))) * sub_instance_interest_pred * obj_instance_interest_pred
+                        predicate_factor_instance = pair_interest_pred_instance_pair_instance.reshape(len(pred_instances[0]),len(pred_instances[0]), 1)
+                        single_result_instance = (predicate_factor_instance * predicate_categories).reshape(-1)
+                        single_result_indx_instance = np.argsort(single_result_instance)[::-1][:100]
+                        single_index_instance = []
+                        for i in range(len(pred_instances[0])):
+                            for j in range(len(pred_instances[0])):
+                                for k in range(cfg.MODEL.PREDICATE_HEADS.RELATION_NUM - 1):
+                                    single_index_instance.append([i, j, k])
+                        single_index_instance = np.array(single_index_instance)
+                        locations_instance = single_index_instance[single_result_indx_instance]
+                        scores_instance = single_result_instance[single_result_indx_instance]
 
-                    prediction_instance_json[str(data[0]['image_id'])] = {
-                        "locations": locations_instance.tolist(),
-                        "relation_ids": (locations_instance[:, 2] + 1).tolist(),
-                        "subject_class_ids": pred_classes[locations_instance[:, 0]].tolist(),
-                        "subject_boxes": pred_boxes[locations_instance[:, 0]].tolist(),
-                        "object_class_ids": pred_classes[locations_instance[:, 1]].tolist(),
-                        "object_boxes": pred_boxes[locations_instance[:, 1]].tolist(),
-                        "scores": scores_instance.tolist()
-                    }
+                        prediction_instance_json[str(data[0]['image_id'])] = {
+                            "locations": locations_instance.tolist(),
+                            "relation_ids": (locations_instance[:, 2] + 1).tolist(),
+                            "subject_class_ids": pred_classes[locations_instance[:, 0]].tolist(),
+                            "subject_boxes": pred_boxes[locations_instance[:, 0]].tolist(),
+                            "object_class_ids": pred_classes[locations_instance[:, 1]].tolist(),
+                            "object_boxes": pred_boxes[locations_instance[:, 1]].tolist(),
+                            "scores": scores_instance.tolist()
+                        }
 
                     pair_interest_pred_instance_pair = pair_interest_pred * (1 - np.eye(len(pred_instances[0])))
                     predicate_factor = pair_interest_pred_instance_pair.reshape(len(pred_instances[0]), len(pred_instances[0]), 1)
@@ -707,6 +708,7 @@ def do_relation_train(cfg, model, resume=False):
                 torch.cuda.empty_cache()
             # except Exception as e:
             #     print(e)
+            # break
 
 def do_relation_test_demo(cfg,image_path,visible=False,visible_num=5):
     predictor = DefaultPredictor(cfg)
