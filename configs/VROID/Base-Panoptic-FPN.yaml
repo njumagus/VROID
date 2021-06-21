@@ -2,7 +2,7 @@ _BASE_: "../Base-RCNN-FPN.yaml"
 OUTPUT_DIR: "./output/panoptic"
 MODEL:
   META_ARCHITECTURE: "PanopticRelation"
-  WEIGHTS: "panoptic_fpn_R_101_3x.pkl"
+  WEIGHTS: "model_final_cafdb1.pkl"
   MASK_ON: True
   RESNETS:
     DEPTH: 101

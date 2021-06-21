@@ -4,7 +4,7 @@ MODEL:
   TRAINABLE: ["instance_encoder","relation_heads.pair_head","relation_heads.predicate_head"]
   DEVICE: "cuda"
   META_ARCHITECTURE: "PanopticRelation"
-  WEIGHTS: "panoptic_fpn_R_101_3x.pkl"
+  WEIGHTS: "model_final_cafdb1.pkl"
   RESNETS:
     DEPTH: 101
   RPN:

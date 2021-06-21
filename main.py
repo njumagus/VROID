@@ -45,6 +45,7 @@ logger = logging.getLogger("detectron2")
 
 def do_panoptic_test(cfg, model):
     categoryies=json.load(open("../data/panoptic_coco_categories.json",'r'))
+    os.mkdir("../data/detectron2_panoptic", exist_ok=True)
     categoryies_dict={}
     for category in categoryies:
         categoryies_dict[category['id']]=category
