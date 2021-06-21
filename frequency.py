@@ -7,8 +7,8 @@ def analyse_reoid():
 
     train_images_dict=json.load(open("../data/viroi_json/train_images_dict.json",'r'))
     train_images_triplets_dict=json.load(open("../data/viroi_json/train_images_triplets_dict.json",'r'))
-    # val_images_dict.update(json.load(open("../data/viroi_json/train_images_dict.json",'r')))
-    # val_images_triplets_dict.update(json.load(open("../data/viroi_json/train_images_triplets_dict.json",'r')))
+    train_images_dict.update(json.load(open("../data/viroi_json/test_images_dict.json",'r')))
+    train_images_triplets_dict.update(json.load(open("../data/viroi_json/test_images_triplets_dict.json",'r')))
     # 'person': {'on': {'chair':30,'boat':10}}
     head_dict={}
     tail_dict={}
